@@ -28,17 +28,17 @@ chrome.runtime.onMessage.addListener(
         // devtools is also configured to recieve this message
         // background will send this to server
         // so we use a POST req specifying JSON data
-        fetch(serverhost, {
-          method: 'POST',
-          headers: {
-            'Content-type': 'application/JSON',
-          },
-          body: JSON.stringify(
-            request
-          )
-        }).then(response => {
-          console.log(response);
-        });
+        // fetch(serverhost, {
+        //   method: 'POST',
+        //   headers: {
+        //     'Content-type': 'application/JSON',
+        //   },
+        //   body: JSON.stringify(
+        //     request
+        //   )
+        // }).then(response => {
+        //   console.log(response);
+        // });
       }
     }
   }

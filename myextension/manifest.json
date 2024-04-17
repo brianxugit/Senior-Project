@@ -6,14 +6,11 @@
   "description": "it's my extension",
   "devtools_page": "devtools.html",
 
-  "host-permissions": ["https://localhost/"],
-
   "permissions" : [
       "tabs",
       "scripting",
       "sidePanel",
-      "storage",
-      "https://localhost:8000/"
+      "storage"
   ],
   "content_scripts": [{
       "matches": ["<all_urls>"],
