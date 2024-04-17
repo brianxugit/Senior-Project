@@ -4,8 +4,6 @@ let tabid = null;
 let element = null;
 const connections = {};
 
-const serverhost = 'http://localhost:8000';
-
 function toggleSelector() {
   console.log("toggle");
 }

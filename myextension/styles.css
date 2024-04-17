@@ -26,7 +26,12 @@
     /*background:rgba(0, 85, 255, 0.25);*/
 
     padding: 3px;
-    background-image: conic-gradient(
+    background-color:rgba(0, 55, 255, 0.35);
+    
+    background-size: auto;
+    background-clip: padding-box;
+
+    /* background-image: conic-gradient(
         from var(--angle),
         #fd1892 0%,
         #b827fc 20%,
@@ -35,15 +40,12 @@
         #fec837 80%,
         #fd1892 100%
         );
-    background-size: auto;
-    background-clip: padding-box;
-
     -webkit-mask: 
         linear-gradient(#fff 0 0) content-box, 
         linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
           mask-composite: exclude;
-    animation: rotate 2s linear infinite;
+    animation: rotate 2s linear infinite; */
 }
 
 @keyframes rotate {

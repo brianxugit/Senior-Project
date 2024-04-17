@@ -1,4 +1,6 @@
 
+let currURL;
+let homeURL;
 let surprise;
 
 chrome.devtools.panels.create("Senior Project", "icon.png", "panel.html", panel => {
@@ -6,13 +8,23 @@ chrome.devtools.panels.create("Senior Project", "icon.png", "panel.html", panel 
     
     panel.onShown.addListener( (extpanel) => {
         // do magic with the panel
-        let clickme = extpanel.document.querySelector('#clickme');
+        //let clickme = extpanel.document.querySelector('#clickme');
+
+        let setHome = extpanel.document.querySelector('#home');
+        let displayHome = extpanel.document.querySelector('#homeURL');
+
         let select = extpanel.document.querySelector('#select');
         surprise    = extpanel.document.querySelector('#surprise');
 
-        clickme.addEventListener('click', () => {
-            chrome.devtools.inspectedWindow.eval('alert("why did you click me");');
+        setHome.addEventListener('click', async() => {
+            homeURL = await chrome.tabs.get(chrome.devtools.inspectedWindow.tabId, (tab) => {
+                displayHome.innerHTML = tab.url;
+            });
         });
+
+        // clickme.addEventListener('click', () => {
+        //     chrome.devtools.inspectedWindow.eval('alert("why did you click me");');
+        // });
         select.addEventListener('click', () => {
             console.log("you clicked the select button");
             // we send the active window tabid to the background
@@ -36,7 +48,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             surprise.innerHTML = `look it's ${JSON.stringify(request)}`;
         };
         sendResponse('got element');
-      }
+    }
+    if (request.type =='URL') {
+        currURL = request.URL;
+    }
 });
 
 // connection to background.js
@@ -52,3 +67,9 @@ backgroundConnection.postMessage({
     name: 'init',
     tabId: chrome.devtools.inspectedWindow.tabId,
 });
+
+// async function getCurrentTab() {
+//     chrome.tabs.sendMessage({
+//         name: 'getURL',
+//     })
+// }
