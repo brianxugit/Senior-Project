@@ -10,10 +10,20 @@ let currURL;
 let homeURL;
 let surprise;
 
+console.log(document.querySelector('#tag'));
+
 chrome.devtools.panels.create("Senior Project", "icon.png", "panel.html", panel => {
     // code invoked on panel creation
     
     panel.onShown.addListener( (extpanel) => {
+
+        // initialize navbar
+        const panelTabs = extpanel.document.getElementsByClassName("tab");
+        for (let tab of panelTabs) {
+            tab.addEventListener('click', async() => {
+                openTab(extpanel.document, tab.innerHTML);
+            });
+        }
 
         let setHome = extpanel.document.querySelector('#home');
         let displayHome = extpanel.document.querySelector('#homeURL');
@@ -85,8 +95,9 @@ backgroundConnection.postMessage({
     tabId: chrome.devtools.inspectedWindow.tabId,
 });
 
-// writes data to a file and assigns an object URL
+// assigns output data to an object URL
 function makeOutFile(data) {
+    // write output data to downloadable JSON
     const filedata = new Blob([JSON.stringify(data)], {type: "application/json"});
 
     if (myfile !== null) window.URL.revokeObjectURL(myfile);
@@ -94,12 +105,26 @@ function makeOutFile(data) {
     return myfile
 }
 
-// creates a pseudo-element which downloads the output file
+// downloads the output file
 function downloadFile() {
+    // generate a hidden DOM element
     const link = document.createElement('a');
     link.setAttribute('href', myfile);
     link.setAttribute('download', "mydata.json");
     document.body.appendChild(link);
     link.click();
-    document.body.removeChild('a');
+}
+
+function openTab(doc, tabName) {
+    var i, tabcontent, tablinks;
+    tabcontent = doc.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+    tablinks = doc.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    doc.getElementById(tabName).style.display = "block";
+    
 }

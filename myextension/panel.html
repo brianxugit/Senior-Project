@@ -2,22 +2,88 @@
 <html>
   <head>
     <meta charset="UTF-8" />
+    <style>
+      body {font-family: Arial;}
+      
+      .navbar {
+        overflow: hidden;
+        border: 1px solid #ccc;
+        background-color: #f1f1f1;
+      }
+      
+      /* Style the buttons inside the tab */
+      .tab button {
+        background-color: inherit;
+        float: left;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 14px 16px;
+        transition: 0.3s;
+        font-size: 17px;
+      }
+      
+      /* Change background color of buttons on hover */
+      .tab button:hover {
+        background-color: #ddd;
+      }
+      
+      /* Create an active/current tablink class */
+      .tab button.active {
+        background-color: #ccc;
+      }
+      
+      /* Style the tab content */
+      .tabcontent {
+        display: none;
+        padding: 6px 12px;
+        border: 1px solid #ccc;
+        border-top: none;
+      }
+      </style>
   </head>
   <body>
 
-    <!-- <h1>I am a header</h1> -->
-    <!-- <input type="button" id="clickme" value="click me"> -->
-    <input type="button" id="home" value="home page">
-    <span id="homeURL"></span><br>
-    <input type="button" id="league" value="league page"><br>
-    <input type="button" id="club" value="club page"><br>
-    <input type="button" id="team" value="team page"><br>
-    <input type="button" id="player" value="player page"><br>
+    <div class="navbar">
+      <button class="tab">Home</button>
+      <button class="tab">Leagues</button>
+      <button class="tab">Clubs</button>
+      <button class="tab">Teams</button>
+      <button class="tab">Players</button>
+    </div>
 
-    <input type="button" id="select" value="select">
-    <input type="button" id="download" value="get file">
-    <input type="button" id="debug" value="debug">
-    <h2><span id="surprise"></span></h2>
-    <span id="debugText"></span>
+    <div id="Home" class="tabcontent">
+      <!-- <h1>I am a header</h1> -->
+      <!-- <input type="button" id="clickme" value="click me"> -->
+      <input type="button" id="home" value="Home page">
+      <span id="homeURL"></span><br>
+      <input type="button" id="league" value="league page"><br>
+      <input type="button" id="club" value="club page"><br>
+      <input type="button" id="team" value="team page"><br>
+      <input type="button" id="player" value="player page"><br>
+
+      <input type="button" id="select" value="select">
+      <input type="button" id="download" value="get file">
+      <input type="button" id="debug" value="debug">
+      <h2><span id="surprise"></span></h2>
+      <span id="debugText"></span>
+    </div>
+
+    <div id="Leagues" class="tabcontent">
+
+    </div>
+    
+    <div id="Clubs" class="tabcontent">
+
+    </div>
+
+    <div id="Teams" class="tabcontent">
+
+    </div>
+
+    <div id="Players" class="tabcontent">
+
+    </div>
+
   </body>
 </html>
