@@ -121,10 +121,9 @@ function openTab(doc, tabName) {
     for (i = 0; i < tabcontent.length; i++) {
       tabcontent[i].style.display = "none";
     }
-    tablinks = doc.getElementsByClassName("tablinks");
+    tablinks = doc.getElementsByClassName("tab");
     for (i = 0; i < tablinks.length; i++) {
       tablinks[i].className = tablinks[i].className.replace(" active", "");
     }
     doc.getElementById(tabName).style.display = "block";
-    
 }
