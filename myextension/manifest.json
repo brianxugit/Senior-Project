@@ -11,7 +11,8 @@
       "activeTab",
       "scripting",
       "sidePanel",
-      "storage"
+      "storage",
+      "downloads"
   ],
   "content_scripts": [{
       "matches": ["<all_urls>"],

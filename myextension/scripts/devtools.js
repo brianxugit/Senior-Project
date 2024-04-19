@@ -1,4 +1,11 @@
 
+var myfile = null;
+
+let OUT = {
+    "URL": [],
+    "HTML": []
+};
+
 let currURL;
 let homeURL;
 let surprise;
@@ -7,8 +14,6 @@ chrome.devtools.panels.create("Senior Project", "icon.png", "panel.html", panel 
     // code invoked on panel creation
     
     panel.onShown.addListener( (extpanel) => {
-        // do magic with the panel
-        //let clickme = extpanel.document.querySelector('#clickme');
 
         let setHome = extpanel.document.querySelector('#home');
         let displayHome = extpanel.document.querySelector('#homeURL');
@@ -16,24 +21,36 @@ chrome.devtools.panels.create("Senior Project", "icon.png", "panel.html", panel 
         let select = extpanel.document.querySelector('#select');
         surprise    = extpanel.document.querySelector('#surprise');
 
+        let download = extpanel.document.querySelector('#download');
+
+        let debug = extpanel.document.querySelector('#debug');
+        debugText = extpanel.document.querySelector('#debugText');
+
         setHome.addEventListener('click', async() => {
             homeURL = await chrome.tabs.get(chrome.devtools.inspectedWindow.tabId, (tab) => {
+                addURL(OUT.URL, tab.url);
                 displayHome.innerHTML = tab.url;
             });
         });
 
-        // clickme.addEventListener('click', () => {
-        //     chrome.devtools.inspectedWindow.eval('alert("why did you click me");');
-        // });
         select.addEventListener('click', () => {
-            console.log("you clicked the select button");
-            // we send the active window tabid to the background
-            // this way the background can find its content script
+            backgroundConnection = chrome.runtime.connect({
+                name: "devtools-page"
+            });
             backgroundConnection.postMessage({
                 name:   'selectToggle',
                 tabId: chrome.devtools.inspectedWindow.tabId,
             })
         });
+
+        download.addEventListener('click', async() => {
+            myfile = makeOutFile(OUT);
+            downloadFile();
+        });
+
+        debug.addEventListener('click', () => {
+            debugText.innerHTML = JSON.stringify(OUT.URL);
+        })
     });
 });
 
@@ -54,22 +71,35 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
 });
 
-// connection to background.js
-const backgroundConnection = chrome.runtime.connect({
+function addURL(list, URL) {
+    if(!list.includes(URL)) list.push(URL);
+    console.log(list);
+}
+
+// initial connection
+let backgroundConnection = chrome.runtime.connect({
     name: "devtools-page"
 });
-
-// on message from background.js
-// idk
-
-// send current tabid to background.js
 backgroundConnection.postMessage({
-    name: 'init',
+    name: 'newTab',
     tabId: chrome.devtools.inspectedWindow.tabId,
 });
 
-// async function getCurrentTab() {
-//     chrome.tabs.sendMessage({
-//         name: 'getURL',
-//     })
-// }
+// writes data to a file and assigns an object URL
+function makeOutFile(data) {
+    const filedata = new Blob([JSON.stringify(data)], {type: "application/json"});
+
+    if (myfile !== null) window.URL.revokeObjectURL(myfile);
+    myfile = window.URL.createObjectURL(filedata);
+    return myfile
+}
+
+// creates a pseudo-element which downloads the output file
+function downloadFile() {
+    const link = document.createElement('a');
+    link.setAttribute('href', myfile);
+    link.setAttribute('download', "mydata.json");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild('a');
+}

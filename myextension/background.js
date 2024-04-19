@@ -47,8 +47,8 @@ chrome.runtime.onConnect.addListener(
   function(devtoolsConnection) {
     var devtoolsListener = function(msg, sender, sendResponse) {
       
-      // init devtools connection
-      if (msg.name == 'init') {
+      // get active tab
+      if (msg.name == 'newTab') {
         id = msg.tabId;
         // connections to devtools require port
         connections[id] = devtoolsConnection;
