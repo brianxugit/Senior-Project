@@ -1,15 +1,4 @@
 
-// sends message to background.js on event inside document body
-// document.addEventListener("click", (event) => {
-//     chrome.runtime.sendMessage({
-//         click: true,
-//       },
-//       response => {
-//         console.log("Received response", response);
-//       }
-//     );
-// });
-
 /* selector code */
 const tags = [
     'DIV',
@@ -24,6 +13,13 @@ const tags = [
 
 let curr = null;
 let selectorEnabled = false;
+
+/* grabs a copy of all links present on the page
+   because we need to disable and re-enable them */
+const pageLinks = [], l = document.links;
+for (var i = 0; i < l.length; i++) {
+    pageLinks.push(l[i].href);
+}
 
 // determine hovered node
 document.addEventListener('mouseover', (e) => {
@@ -58,25 +54,15 @@ document.addEventListener('mouseover', (e) => {
     false
 );
 
-// for disabling and enabling links on document
 function disableLinks() {
-    getA().pointerEvents = 'none';
+    for (var i = 0; i < l.length; i++) {
+        document.links[i].href = 'javascript:void(0)';
+    }
 }
 function enableLinks() {
-    getA().pointerEvents = '';
-}
-function getA() {
-    for (let i = 0; i < document.styleSheets.length; i++) {
-        let styleSheet = document.styleSheets[i];
-        let rules = styleSheet.cssRules;
-        for (let j = 0; j < rules.length; j++) {
-            let rule = rules[j];
-            if (rule.selectorText === 'a') {
-                return(rule.style);
-            }
-        }
+    for (var i = 0; i < l.length; i++) {
+        document.links[i].href = pageLinks[i];
     }
-    return 0;
 }
 
 document.addEventListener('click', async () => {
