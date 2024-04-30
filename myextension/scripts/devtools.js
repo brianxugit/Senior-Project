@@ -192,9 +192,9 @@ function addURL(prop, url) {
 
 function addProperty(prop, url, key, val) {
     if (!prop.hasOwnProperty(url)) prop[url] = {};
-    console.log(`look at ${url} ${key} ${val}`);
     newprop = prop[url];
-    newprop[key] = val;
+    if (!newprop.hasOwnProperty(key)) newprop[key] = [];
+    newprop[key].push(val);
 }
 
 // initial connection
