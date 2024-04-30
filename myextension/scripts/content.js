@@ -9,10 +9,15 @@ const tags = [
     'LINK',
     'A',
     'IMG',
+    'DT',
+    'DD',
+    'H1','H2','H3','H4','H5','H6',
 ]
 
 let curr = null;
 let selectorEnabled = false;
+let set = null;
+let type = null;
 
 /* grabs a copy of all links present on the page
    because we need to disable and re-enable them */
@@ -66,30 +71,37 @@ function enableLinks() {
 }
 
 document.addEventListener('click', async () => {
-    console.log('you clicked content while selector was %s', selectorEnabled);
+    //console.log('you clicked content while selector was %s', selectorEnabled);
     if (!selectorEnabled) return;
 
+    console.log(`set is ${set}`);
+
     chrome.runtime.sendMessage({
-        type:       'element',
-        id:         curr.id,
-        name:       curr.className,
-        tagname:    curr.tagName.toLowerCase(),
-        classlist:  curr.classList,
-        path: getXPathForElement(curr),
+        name:   'select',
+        set:    set,
+        type:   type,
+        path:   getXPathForElement(curr),
         },
         response => {
             console.log("content got response", response);
         });
+    selectorEnabled = false;
 });
 
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
 
         if (request.name === 'selectToggle') {
+            console.dir(request);
             selectorEnabled = !selectorEnabled;
 
             if (selectorEnabled) disableLinks();
             else enableLinks();
+
+            set = request.set;
+            type = request.type;
+
+            console.log(`set is ${set}`);
 
             sendResponse({
                 selectStatus:   selectorEnabled,

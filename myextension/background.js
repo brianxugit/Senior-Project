@@ -62,6 +62,8 @@ chrome.runtime.onConnect.addListener(
         (async () => {
           const response = await chrome.tabs.sendMessage(msg.tabId, {
             name: msg.name,
+            set: msg.set,
+            type: msg.type,
           });
           console.log(response);
         })();

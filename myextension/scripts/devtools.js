@@ -2,8 +2,31 @@
 var myfile = null;
 
 let OUT = {
-    "URL": [],
-    "HTML": []
+    "HOMEURL": "",
+    "LEAGUES": {
+        "URLS": [],
+        "HTML": {
+            
+        }
+    },
+    "CLUBS":   {
+        "URLS": [],
+        "HTML": {
+            
+        }
+    },
+    "TEAMS":   {
+        "URLS": [],
+        "HTML": {
+            
+        }
+    },
+    "PLAYERS": {
+        "URLS": [],
+        "HTML": {
+
+        }
+    },
 };
 
 let currURL;
@@ -31,6 +54,26 @@ chrome.devtools.panels.create("Senior Project", "icon.png", "panel.html", panel 
         let select = extpanel.document.querySelector('#select');
         surprise    = extpanel.document.querySelector('#surprise');
 
+        // league
+        let getLeague = extpanel.document.querySelector('#league');
+        let getLeague_name = extpanel.document.querySelector('#league-name');
+        let showLeague = extpanel.document.querySelector('#leagueURL');
+
+        // club
+        let getClub = extpanel.document.querySelector('#club');
+        let getClub_name = extpanel.document.querySelector('#club-name');
+        let showClub = extpanel.document.querySelector('#clubURL');
+
+        // team
+        let getTeam = extpanel.document.querySelector('#team');
+        let getTeam_name = extpanel.document.querySelector('#team-name');
+        let showTeam = extpanel.document.querySelector('#teamURL');
+
+        // player
+        let getPlayer = extpanel.document.querySelector('#player');
+        let getPlayer_name = extpanel.document.querySelector('#player-name');
+        let showPlayer = extpanel.document.querySelector('#playerURL');
+
         let download = extpanel.document.querySelector('#download');
 
         let debug = extpanel.document.querySelector('#debug');
@@ -38,11 +81,10 @@ chrome.devtools.panels.create("Senior Project", "icon.png", "panel.html", panel 
 
         setHome.addEventListener('click', async() => {
             homeURL = await chrome.tabs.get(chrome.devtools.inspectedWindow.tabId, (tab) => {
-                addURL(OUT.URL, tab.url);
+                OUT.HOMEURL = tab.url;
                 displayHome.innerHTML = tab.url;
             });
         });
-
         select.addEventListener('click', () => {
             backgroundConnection = chrome.runtime.connect({
                 name: "devtools-page"
@@ -53,28 +95,116 @@ chrome.devtools.panels.create("Senior Project", "icon.png", "panel.html", panel 
             })
         });
 
+        getLeague.addEventListener('click', async() => {
+            await chrome.tabs.get(chrome.devtools.inspectedWindow.tabId, (tab) => {
+                addURL(OUT.LEAGUES.URLS, tab.url);
+                showLeague.innerHTML = tab.url;
+            });
+        });
+        getLeague_name.addEventListener('click', () => {
+            backgroundConnection = chrome.runtime.connect({
+                name: "devtools-page"
+            });
+            backgroundConnection.postMessage({
+                name:   'selectToggle',
+                set:    'league',
+                type:   'name',
+                tabId: chrome.devtools.inspectedWindow.tabId,
+            })
+        });
+
+        getClub.addEventListener('click', async() => {
+            await chrome.tabs.get(chrome.devtools.inspectedWindow.tabId, (tab) => {
+                addURL(OUT.CLUBS.URLS, tab.url);
+                showClub.innerHTML = ` added ${tab.url} to club URLs`;
+            });
+        });
+        getClub_name.addEventListener('click', () => {
+            backgroundConnection = chrome.runtime.connect({
+                name: "devtools-page"
+            });
+            backgroundConnection.postMessage({
+                name:   'selectToggle',
+                set:    'club',
+                type:   'name',
+                tabId: chrome.devtools.inspectedWindow.tabId,
+            })
+        });
+
+        getTeam.addEventListener('click', async() => {
+            await chrome.tabs.get(chrome.devtools.inspectedWindow.tabId, (tab) => {
+                addURL(OUT.TEAMS.URLS, tab.url);
+                showTeam.innerHTML = ` added ${tab.url} to team URLs`;
+            });
+        });
+        getTeam_name.addEventListener('click', () => {
+            backgroundConnection = chrome.runtime.connect({
+                name: "devtools-page"
+            });
+            backgroundConnection.postMessage({
+                name:   'selectToggle',
+                set:    'team',
+                type:   'name',
+                tabId: chrome.devtools.inspectedWindow.tabId,
+            })
+        });
+
+        getPlayer.addEventListener('click', async() => {
+            await chrome.tabs.get(chrome.devtools.inspectedWindow.tabId, (tab) => {
+                addURL(OUT.PLAYERS.URLS, tab.url);
+                showPlayer.innerHTML = ` added ${tab.url} to player URLs`;
+            });
+        });
+        getPlayer_name.addEventListener('click', () => {
+            backgroundConnection = chrome.runtime.connect({
+                name: "devtools-page"
+            });
+            backgroundConnection.postMessage({
+                name:   'selectToggle',
+                set:    'player',
+                type:   'name',
+                tabId: chrome.devtools.inspectedWindow.tabId,
+            })
+        });
+
         download.addEventListener('click', async() => {
             myfile = makeOutFile(OUT);
             downloadFile();
         });
 
         debug.addEventListener('click', () => {
-            debugText.innerHTML = JSON.stringify(OUT.URL);
-        })
+            debugText.innerHTML = JSON.stringify(OUT);
+        });
+
+        openTab(extpanel.document, 'Home');
     });
 });
 
 // on message from content scripts
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     
-    if (request.type == 'element') {
+    if (request.name == 'select') {
         element = request.element;
-        console.log("devtools got %O from content", element);
-        chrome.devtools.inspectedWindow.eval('alert(request.classlist);');
         if (surprise) {
-            surprise.innerHTML = `look it's ${JSON.stringify(request)}`;
+            surprise.innerHTML = `got response ${JSON.stringify(request)}`;
         };
         sendResponse('got element');
+        switch (request.set) {
+            case 'home':
+                break;
+            case 'league':
+                addProperty(OUT.LEAGUES.HTML, request.type, request.path);
+                break;
+            case 'club':
+                addProperty(OUT.CLUBS.HTML, request.type, request.path);
+                break;
+            case 'team':
+                addProperty(OUT.TEAMS.HTML, request.type, request.path);
+                break;
+            case 'player':
+                addProperty(OUT.PLAYERS.HTML, request.type, request.path);
+                break;
+        }
     }
     if (request.type =='URL') {
         currURL = request.URL;
@@ -84,6 +214,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 function addURL(list, URL) {
     if(!list.includes(URL)) list.push(URL);
     console.log(list);
+}
+
+function addProperty(prop, key, val) {
+    prop[key] = val;
+    console.log(prop, key, value);
 }
 
 // initial connection
