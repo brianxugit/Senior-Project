@@ -242,29 +242,9 @@ function openTab(doc, tabName) {
 function resetData() {
     OUT = {
         "HOMEURL": "",
-        "LEAGUES": {
-            "URLS": [],
-            "HTML": {
-                
-            }
-        },
-        "CLUBS":   {
-            "URLS": [],
-            "HTML": {
-                
-            }
-        },
-        "TEAMS":   {
-            "URLS": [],
-            "HTML": {
-                
-            }
-        },
-        "PLAYERS": {
-            "URLS": [],
-            "HTML": {
-    
-            }
-        },
+        "LEAGUES": {},
+        "CLUBS":   {},
+        "TEAMS":   {},
+        "PLAYERS": {},
     };
 }
