@@ -86,6 +86,7 @@ document.addEventListener('click', async () => {
             console.log("content got response", response);
         });
     selectorEnabled = false;
+    enableLinks();
 });
 
 chrome.runtime.onMessage.addListener(

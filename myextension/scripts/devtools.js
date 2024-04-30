@@ -51,7 +51,7 @@ chrome.devtools.panels.create("Senior Project", "icon.png", "panel.html", panel 
         let setHome = extpanel.document.querySelector('#home');
         let displayHome = extpanel.document.querySelector('#homeURL');
 
-        let select = extpanel.document.querySelector('#select');
+        //let select = extpanel.document.querySelector('#select');
         surprise    = extpanel.document.querySelector('#surprise');
 
         // league
@@ -85,15 +85,15 @@ chrome.devtools.panels.create("Senior Project", "icon.png", "panel.html", panel 
                 displayHome.innerHTML = tab.url;
             });
         });
-        select.addEventListener('click', () => {
-            backgroundConnection = chrome.runtime.connect({
-                name: "devtools-page"
-            });
-            backgroundConnection.postMessage({
-                name:   'selectToggle',
-                tabId: chrome.devtools.inspectedWindow.tabId,
-            })
-        });
+        // select.addEventListener('click', () => {
+        //     backgroundConnection = chrome.runtime.connect({
+        //         name: "devtools-page"
+        //     });
+        //     backgroundConnection.postMessage({
+        //         name:   'selectToggle',
+        //         tabId: chrome.devtools.inspectedWindow.tabId,
+        //     })
+        // });
 
         getLeague.addEventListener('click', async() => {
             await chrome.tabs.get(chrome.devtools.inspectedWindow.tabId, (tab) => {
