@@ -75,6 +75,7 @@ chrome.devtools.panels.create("Senior Project", "icon.png", "panel.html", panel 
         let showPlayer = extpanel.document.querySelector('#playerURL');
 
         let download = extpanel.document.querySelector('#download');
+        let reset = extpanel.document.querySelector('#reset');
 
         let debug = extpanel.document.querySelector('#debug');
         debugText = extpanel.document.querySelector('#debugText');
@@ -171,6 +172,9 @@ chrome.devtools.panels.create("Senior Project", "icon.png", "panel.html", panel 
             myfile = makeOutFile(OUT);
             downloadFile();
         });
+        reset.addEventListener('click', async() => {
+            resetData();
+        });
 
         debug.addEventListener('click', () => {
             debugText.innerHTML = JSON.stringify(OUT);
@@ -218,7 +222,7 @@ function addURL(list, URL) {
 
 function addProperty(prop, key, val) {
     prop[key] = val;
-    console.log(prop, key, value);
+    console.log(prop, key, val);
 }
 
 // initial connection
@@ -261,4 +265,34 @@ function openTab(doc, tabName) {
       tablinks[i].className = tablinks[i].className.replace(" active", "");
     }
     doc.getElementById(tabName).style.display = "block";
+}
+
+function resetData() {
+    OUT = {
+        "HOMEURL": "",
+        "LEAGUES": {
+            "URLS": [],
+            "HTML": {
+                
+            }
+        },
+        "CLUBS":   {
+            "URLS": [],
+            "HTML": {
+                
+            }
+        },
+        "TEAMS":   {
+            "URLS": [],
+            "HTML": {
+                
+            }
+        },
+        "PLAYERS": {
+            "URLS": [],
+            "HTML": {
+    
+            }
+        },
+    };
 }
