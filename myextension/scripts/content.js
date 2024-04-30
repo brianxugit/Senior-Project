@@ -81,6 +81,7 @@ document.addEventListener('click', async () => {
         set:    set,
         type:   type,
         path:   getXPathForElement(curr),
+        url:    location.href,
         },
         response => {
             console.log("content got response", response);

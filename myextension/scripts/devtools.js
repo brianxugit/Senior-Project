@@ -3,30 +3,10 @@ var myfile = null;
 
 let OUT = {
     "HOMEURL": "",
-    "LEAGUES": {
-        "URLS": [],
-        "HTML": {
-            
-        }
-    },
-    "CLUBS":   {
-        "URLS": [],
-        "HTML": {
-            
-        }
-    },
-    "TEAMS":   {
-        "URLS": [],
-        "HTML": {
-            
-        }
-    },
-    "PLAYERS": {
-        "URLS": [],
-        "HTML": {
-
-        }
-    },
+    "LEAGUES": {},
+    "CLUBS":   {},
+    "TEAMS":   {},
+    "PLAYERS": {},
 };
 
 let currURL;
@@ -86,19 +66,10 @@ chrome.devtools.panels.create("Senior Project", "icon.png", "panel.html", panel 
                 displayHome.innerHTML = tab.url;
             });
         });
-        // select.addEventListener('click', () => {
-        //     backgroundConnection = chrome.runtime.connect({
-        //         name: "devtools-page"
-        //     });
-        //     backgroundConnection.postMessage({
-        //         name:   'selectToggle',
-        //         tabId: chrome.devtools.inspectedWindow.tabId,
-        //     })
-        // });
 
         getLeague.addEventListener('click', async() => {
             await chrome.tabs.get(chrome.devtools.inspectedWindow.tabId, (tab) => {
-                addURL(OUT.LEAGUES.URLS, tab.url);
+                addURL(OUT.LEAGUES, tab.url);
                 showLeague.innerHTML = tab.url;
             });
         });
@@ -116,7 +87,7 @@ chrome.devtools.panels.create("Senior Project", "icon.png", "panel.html", panel 
 
         getClub.addEventListener('click', async() => {
             await chrome.tabs.get(chrome.devtools.inspectedWindow.tabId, (tab) => {
-                addURL(OUT.CLUBS.URLS, tab.url);
+                addURL(OUT.CLUBS, tab.url);
                 showClub.innerHTML = ` added ${tab.url} to club URLs`;
             });
         });
@@ -134,7 +105,7 @@ chrome.devtools.panels.create("Senior Project", "icon.png", "panel.html", panel 
 
         getTeam.addEventListener('click', async() => {
             await chrome.tabs.get(chrome.devtools.inspectedWindow.tabId, (tab) => {
-                addURL(OUT.TEAMS.URLS, tab.url);
+                addURL(OUT.TEAMS, tab.url);
                 showTeam.innerHTML = ` added ${tab.url} to team URLs`;
             });
         });
@@ -152,7 +123,7 @@ chrome.devtools.panels.create("Senior Project", "icon.png", "panel.html", panel 
 
         getPlayer.addEventListener('click', async() => {
             await chrome.tabs.get(chrome.devtools.inspectedWindow.tabId, (tab) => {
-                addURL(OUT.PLAYERS.URLS, tab.url);
+                addURL(OUT.PLAYERS, tab.url);
                 showPlayer.innerHTML = ` added ${tab.url} to player URLs`;
             });
         });
@@ -197,16 +168,16 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             case 'home':
                 break;
             case 'league':
-                addProperty(OUT.LEAGUES.HTML, request.type, request.path);
+                addProperty(OUT.LEAGUES, request.url, request.type, request.path);
                 break;
             case 'club':
-                addProperty(OUT.CLUBS.HTML, request.type, request.path);
+                addProperty(OUT.CLUBS, request.url, request.type, request.path);
                 break;
             case 'team':
-                addProperty(OUT.TEAMS.HTML, request.type, request.path);
+                addProperty(OUT.TEAMS, request.url, request.type, request.path);
                 break;
             case 'player':
-                addProperty(OUT.PLAYERS.HTML, request.type, request.path);
+                addProperty(OUT.PLAYERS, request.url, request.type, request.path);
                 break;
         }
     }
@@ -215,14 +186,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
 });
 
-function addURL(list, URL) {
-    if(!list.includes(URL)) list.push(URL);
-    console.log(list);
+function addURL(prop, url) {
+    if (!prop.hasOwnProperty(url)) prop[url] = {};
 }
 
-function addProperty(prop, key, val) {
-    prop[key] = val;
-    console.log(prop, key, val);
+function addProperty(prop, url, key, val) {
+    if (!prop.hasOwnProperty(url)) prop[url] = {};
+    console.log(`look at ${url} ${key} ${val}`);
+    newprop = prop[url];
+    newprop[key] = val;
 }
 
 // initial connection
