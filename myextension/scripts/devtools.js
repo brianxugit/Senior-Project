@@ -209,7 +209,7 @@ backgroundConnection.postMessage({
 // assigns output data to an object URL
 function makeOutFile(data) {
     // write output data to downloadable JSON
-    const filedata = new Blob([JSON.stringify(data)], {type: "application/json"});
+    const filedata = new Blob([JSON.stringify(data, null, 3)], {type: "application/json"});
 
     if (myfile !== null) window.URL.revokeObjectURL(myfile);
     myfile = window.URL.createObjectURL(filedata);
